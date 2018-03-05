@@ -1,6 +1,53 @@
 * {
   box-sizing: border-box;
   font-size: 24px;
-  color: #f7f7ff;
-  background-color: #495867;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+}
+
+html {
+  color: #fff;
+  background: #1c92d2;
+  background: -webkit-linear-gradient(to right, #f2fcfe, #1c92d2);
+  background: linear-gradient(to right, #f2fcfe, #1c92d2);
+
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type=text] {
+  border-radius: 5px;
+  text-transform: lowercase;
+}
+
+.hint {
+  font-size: 12px;
+}
+
+.btn {
+  margin-top: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn a {
+  color: #000;
+}
+
+a:hover {
+  text-decoration: underline;
 }

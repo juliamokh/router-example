@@ -3,6 +3,8 @@ import Component from '../blackbox';
 class App extends Component {
   constructor() {
     super();
+
+    this.host.classList.add('container');
   }
 
   render() {
