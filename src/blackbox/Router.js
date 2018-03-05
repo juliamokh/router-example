@@ -1,4 +1,5 @@
 import Component from './Component';
+import { bindAll, isEqualPaths, extractUrlParams } from '../utils/';
 
 class Router extends Component {
   constructor(props) {
@@ -7,36 +8,41 @@ class Router extends Component {
     const { host, routes } = props;
 
     this.state = {
-      routes: routes,
-      currentComponent: null,
+      routes,
       currentRoute: null,
+      currentComponent: null
     };
 
     this.host = host;
 
-    window.addEventListener('hashchange', this.hadleHashChange());
+    bindAll(this, 'hadleHashChange', 'handleLogin');
+
+    window.addEventListener('hashchange', () => this.hadleHashChange(this.path));
+    this.hadleHashChange(this.path);
   }
 
   get path() {
     return window.location.hash.slice(1);
   }
 
-  hadleHashChange() {
+  hadleHashChange(path) {
     const { routes, currentRoute } = this.state;
-    const nextRoute = routes.find( ({ href }) => href === this.path );
+    const nextRoute = routes.find( ({ href }) => isEqualPaths(href, path));
 
     if(nextRoute && nextRoute !== currentRoute) {
       
       if(nextRoute.onEnter) {
-        nextRoute.onEnter(this.navigateTo);
-        return;
+        nextRoute.onEnter(this.navigateTo, this.state);
+      };
+
+      if(nextRoute.redirectTo) {
+        return this.navigateTo(nextRoute.redirectTo);
       };
 
       this.updateState({
+        currentRoute: nextRoute,
         currentComponent: new nextRoute.component(),
-        currentRoute: nextRoute
       });
-      console.log(this.state);
     }
   }
 
@@ -44,9 +50,17 @@ class Router extends Component {
     window.location.hash = url;
   }
 
+  handleLogin(login) {
+    this.updateState({ login });
+  }
+
   render() {
-    const { currentComponent } = this.state;
-    return currentComponent.update();
+    const { currentRoute, currentComponent } = this.state;
+
+    return currentComponent.update({ 
+      callback: this.handleLogin,
+      params: extractUrlParams(currentRoute.href, this.path),
+    });
   }
 
 };
